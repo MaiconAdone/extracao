@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Extrair Dados da Imagem e Comparar Faces</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: left; /* Alinhar o texto à esquerda */
+            background-color: white;
+            color: #18223c;
+            padding: 20px; /* Adicionar um pouco de espaço na borda */
+            
+        }
+
+        h1 {
+            margin-top: 0; /* Remover a margem superior do título */
+            text-align: center;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #337ca9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            color: white;
+        }
+
+        input[type="file"] {
+            margin-top: 5px;
+        }
+
+        input[type="submit"] {
+            margin-top: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+            margin-top: 30px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        li strong {
+            font-weight: bold;
+        }
+
+        li span {
+            color: black;
+        }
+
+        .message {
+            font-size: 18px;
+            padding: 10px;
+            margin-top: 20px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .message.similarity {
+            background-color: #4CAF50;
+        }
+
+        .message:not(.similarity) {
+            background-color: #FF5733;
+        }
+
+        .file-name {
+            margin-left: 10px; /* Adicionar um espaço entre o ícone e o nome do arquivo */
+        }
+        /* Estilo para o resultado da extração de texto */
+        ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+            margin-top: 30px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        li strong {
+            font-weight: bold;
+        }
+
+        li span {
+            color: white; /* Mudar a cor do texto do resultado para branco */
+        }
+    </style>
+    <script>
+        function showImagePreview(inputId) {
+            var inputElement = document.getElementById(inputId);
+            var imagePreview = document.getElementById(inputId + "-preview");
+            if (inputElement.files && inputElement.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    imagePreview.style.display = "inline-block";
+                };
+                reader.readAsDataURL(inputElement.files[0]);
+
+                // Mostrar o nome do arquivo selecionado
+                //var fileName = inputElement.files[0].name;
+                //document.getElementById(inputId + "-name").innerText = fileName;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Extrair Dados da Imagem e Comparar Faces</h1>
+    <div class="form-container">
+        <form method="post" enctype="multipart/form-data">
+            <label for="cnh_image">Enviar Imagem da CNH:</label>
+            <input type="file" id="cnh_image" name="cnh_image" onchange="showImagePreview('cnh_image')">
+            <span id="cnh_image-name" class="file-name"></span>
+            <br>
+
+            <label for="selfie_image">Enviar Selfie:</label>
+            <input type="file" id="selfie_image" name="selfie_image" onchange="showImagePreview('selfie_image')">
+            <span id="selfie_image-name" class="file-name"></span>
+            <br>
+
+            <input type="submit" value="Extrair e Comparar">
+        </form>
+
+        {% if extracted_text %}
+            <h2>Resultado da Extração de Texto:</h2>
+            <ul>
+                {% for key, value in extracted_text.items() %}
+                    <li><strong>{{ key }}:</strong> <span>{{ value }}</span></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if similarity is not none %}
+            <h2>Resultado da Comparação de Faces:</h2>
+            {% if similarity >= 70 %}
+                <div class="message similarity">As faces correspondem! Similaridade: {{ similarity }}%</div>
+            {% else %}
+                <div class="message">Não corresponde! Similaridade: {{ similarity }}%</div>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="image-preview-container">
+        <div id="overall-preview" class="image-preview"></div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+       
+   
+
+
+    
+
+        
+
+
+
+        
+
+        
+
+    
+
+
+        
+
+
+
+        
+
+    
+
+
+    
+
+
+
